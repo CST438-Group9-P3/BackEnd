@@ -1,9 +1,9 @@
 build:
   docker:
     web:
-      dockerfile: Group9-P3-BackEnd/Dockerfile
+      dockerfile: project3Group9/Dockerfile
   config:
-    POM_PATH: Group9-P3-BackEnd/pom.xml
+    POM_PATH: project3Group9/pom.xml
 
 run:
-  web: java -jar Group9-P3-BackEnd/target/otterpicks.jar
+  web: java -jar project3Group9/target/otterpicks.jar

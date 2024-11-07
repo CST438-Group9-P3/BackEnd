@@ -6,4 +6,4 @@ build:
     POM_PATH: Group9-P3-BackEnd/pom.xml
 
 run:
-  web: java -jar Group9-P3-BackEnd/target/otterpicks.jar
+  web: java -jar Group9-P3-BackEnd/target/app.jar

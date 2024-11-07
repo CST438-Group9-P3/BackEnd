@@ -1,0 +1,1 @@
+web: cd project3Group9 && ./mvnw spring-boot:run

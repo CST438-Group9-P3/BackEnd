@@ -1,9 +1,9 @@
 build:
-  buildpacks:
-    - heroku/java
-
-  commands:
-    - cd project3Group9 && ./mvnw clean install
+  docker:
+    web:
+      dockerfile: Group9-P3-BackEnd/Dockerfile
+  config:
+    POM_PATH: Group9-P3-BackEnd/pom.xml
 
 run:
-  web: cd project3Group9 && ./mvnw spring-boot:run
+  web: java -jar Group9-P3-BackEnd/target/otterpicks.jar

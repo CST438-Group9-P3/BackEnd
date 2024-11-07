@@ -1,6 +1,9 @@
 build:
-  docker:
-    web: Dockerfile
+  buildpacks:
+    - heroku/java
+
+  commands:
+    - cd project3Group9 && ./mvnw clean install
+
 run:
-  web: bundle exec puma -C config/puma.rb
-#gelo
+  web: cd project3Group9 && ./mvnw spring-boot:run

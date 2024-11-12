@@ -10,8 +10,6 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @SpringBootApplication
-@EnableTransactionManagement
-@EntityScan("com.example.project3group9.api.model")
 
 public class Project3Group9Application {
     @RequestMapping("/")

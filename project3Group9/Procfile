@@ -1,6 +1,0 @@
-web: java -jar target/otterpicks.jar
-web: cd project3Group9 && mvn clean install && mvn spring-boot:run
-
-
-
-

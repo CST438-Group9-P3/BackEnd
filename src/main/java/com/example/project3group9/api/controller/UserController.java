@@ -19,7 +19,6 @@ public class UserController {
         this.userRepository = userRepository;
     }
 
-    @Transactional
     @GetMapping("/users")
     public List<User> users(){
         return userRepository.findAll();

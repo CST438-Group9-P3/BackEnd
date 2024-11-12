@@ -2,6 +2,8 @@ package com.example.project3group9.api.model;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name="user")
 public class User {
@@ -20,8 +22,8 @@ public class User {
     @Column(name="account_balance")
     private Double account_balance;
 
-//    @OneToMany(mappedBy = "user")
-//    Set<Pick> wishlists;
+    @OneToMany(mappedBy = "user")
+    private Set<Transaction> transactions;
 
     public User() {};
 

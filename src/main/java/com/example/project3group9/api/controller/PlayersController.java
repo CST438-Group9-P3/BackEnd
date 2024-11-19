@@ -21,3 +21,4 @@ public class PlayersController {
     }
     @GetMapping("/players")
         public List<Players> players(){return playersControllerRepository.findAll();}}
+

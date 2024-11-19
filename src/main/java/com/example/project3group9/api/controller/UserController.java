@@ -1,6 +1,8 @@
 package com.example.project3group9.api.controller;
 
+import com.example.project3group9.api.model.Players;
 import com.example.project3group9.api.model.User;
+import com.example.project3group9.api.repositories.PlayersControllerRepository;
 import com.example.project3group9.api.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,15 +16,21 @@ import java.util.Optional;
 public class UserController {
 
     private final UserRepository userRepository;
+    private final PlayersControllerRepository playersControllerRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(UserRepository userRepository, PlayersControllerRepository playersControllerRepository) {
         this.userRepository = userRepository;
+        this.playersControllerRepository = playersControllerRepository;
     }
 
     @GetMapping("/users")
     public List<User> users(){
         return userRepository.findAll();
+    }
+    @GetMapping("/players")
+    public List<Players>players(){
+        return playersControllerRepository.findAll();
     }
 
     @PostMapping("/login")

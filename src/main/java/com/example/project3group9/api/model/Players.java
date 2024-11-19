@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 @Entity
 @Table(name = "player")
-public class OttersMenBasketBall {
+public class Players {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "player_id")
@@ -21,7 +21,7 @@ public class OttersMenBasketBall {
 
 
 
-    public OttersMenBasketBall() {
+    public Players() {
     }
 
     public Integer getPlayer_id() {

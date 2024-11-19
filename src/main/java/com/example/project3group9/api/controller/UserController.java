@@ -16,21 +16,15 @@ import java.util.Optional;
 public class UserController {
 
     private final UserRepository userRepository;
-    private final PlayersControllerRepository playersControllerRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository, PlayersControllerRepository playersControllerRepository) {
+    public UserController(UserRepository userRepository) {
         this.userRepository = userRepository;
-        this.playersControllerRepository = playersControllerRepository;
     }
 
     @GetMapping("/users")
     public List<User> users(){
         return userRepository.findAll();
-    }
-    @GetMapping("/players")
-    public List<Players>players(){
-        return playersControllerRepository.findAll();
     }
 
     @PostMapping("/login")

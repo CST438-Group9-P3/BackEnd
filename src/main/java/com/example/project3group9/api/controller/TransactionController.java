@@ -38,12 +38,56 @@ public class TransactionController {
             transaction.setAmount(amount);
             transaction.setTimestamp(timestamp);
             if(type.equals("withdraw")){
+                if(amount > userOptional.get().getAccount_balance()){
+                    throw new RuntimeException("Amount exceeds account balance");
+                }
                 userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - amount);
             } else if(type.equals("deposit")){
+                if(amount < 0){
+                    throw new RuntimeException("Amount cannot be negative");
+                }
                 userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + amount);
             }
             return transactionRepository.save(transaction);
         }
         throw new RuntimeException("User not found");
+    }
+
+    @PostMapping("/withdraw")
+    public Transaction withdraw(@RequestParam Integer userId, @RequestParam Double amount, @RequestParam Date timestamp) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if (userOptional.isPresent()) {
+            if(amount > userOptional.get().getAccount_balance()){
+                throw new RuntimeException("Withdraw amount is greater than account balance");
+            }
+            Transaction transaction = new Transaction();
+            transaction.setUser(userOptional.get());
+            transaction.setType("withdraw");
+            transaction.setAmount(amount);
+            transaction.setTimestamp(timestamp);
+            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - amount);
+            return transactionRepository.save(transaction);
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    @PostMapping("/deposit")
+    public Transaction deposit(@RequestParam Integer userId, @RequestParam Double amount, @RequestParam Date timestamp) {
+        if(amount < 0){
+            throw new RuntimeException("Amount cannot be negative");
+        }
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if (userOptional.isPresent()) {
+            Transaction transaction = new Transaction();
+            transaction.setUser(userOptional.get());
+            transaction.setType("deposit");
+            transaction.setAmount(amount);
+            transaction.setTimestamp(timestamp);
+            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + amount);
+            return transactionRepository.save(transaction);
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 }

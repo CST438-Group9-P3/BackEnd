@@ -53,4 +53,8 @@ public class PickController {
         }
         throw new RuntimeException("User or Player not found");
     }
+    @PatchMapping("/finalizePick")
+    public Pick finalizePick(@RequestParam Integer userId, @RequestParam Integer playerId) {
+        return null;
+    }
 }

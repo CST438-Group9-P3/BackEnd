@@ -12,7 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.Optional;
 
 @CrossOrigin
@@ -34,6 +36,40 @@ public class PickController {
     @GetMapping("/picks")
     public List<Pick> picks() {
         return pickRepository.findAll();
+    }
+
+    @GetMapping("/userActivePicks")
+    public List<Pick> userActivePicks(@RequestParam Integer userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isPresent()) {
+            List<Pick> activePicks = new ArrayList<>();
+            List<Pick> picks = pickRepository.findAll();
+            for (Pick pick : picks) {
+                if(pick.getStatus().equals("active") && Objects.equals(pick.getUser().getUser_id(), user.get().getUser_id())) {
+                    activePicks.add(pick);
+                }
+            }
+            return activePicks;
+        } else {
+            throw new RuntimeException("User not found");
+        }
+    }
+
+    @GetMapping("/userPastPicks")
+    public List<Pick> userPastPicks(@RequestParam Integer userId) {
+        Optional<User> user = userRepository.findById(userId);
+        if(user.isPresent()) {
+            List<Pick> pastPicks = new ArrayList<>();
+            List<Pick> picks = pickRepository.findAll();
+            for (Pick pick : picks) {
+                if(pick.getStatus().equals("past") && Objects.equals(pick.getUser().getUser_id(), user.get().getUser_id())) {
+                    pastPicks.add(pick);
+                }
+            }
+            return pastPicks;
+        } else {
+            throw new RuntimeException("User not found");
+        }
     }
 
     @PostMapping("/createPick")

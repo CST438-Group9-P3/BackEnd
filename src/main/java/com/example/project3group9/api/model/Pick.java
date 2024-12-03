@@ -35,6 +35,9 @@ public class Pick {
     @Column(name="timestamp")
     private Date timestamp;
 
+    @Column(name="status")
+    private String status;
+
     public Pick (){};
 
     public Integer getPick_id() {
@@ -84,5 +87,11 @@ public class Pick {
     }
     public void setTimestamp(Date timestamp) {
         this.timestamp = timestamp;
+    }
+    public String getStatus() {
+        return status;
+    }
+    public void setStatus(String status) {
+        this.status = status;
     }
 }

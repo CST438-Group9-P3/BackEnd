@@ -30,7 +30,7 @@ public class TransactionController {
 
     @PostMapping("/transaction")
     public Transaction transaction(@RequestParam Integer user_id, @RequestParam String type, @RequestParam Double amount, @RequestParam Date timestamp) {
-        Optional<User> userOptional = userRepository.findByUserId(user_id);
+        Optional<User> userOptional = userRepository.findByUser_Id(user_id);
         if (userOptional.isPresent()) {
             Transaction transaction = new Transaction();
             transaction.setUser(userOptional.get());

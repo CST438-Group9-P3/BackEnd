@@ -16,7 +16,7 @@ public class Pick {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "player_id", nullable = false)
     private Players player;
 

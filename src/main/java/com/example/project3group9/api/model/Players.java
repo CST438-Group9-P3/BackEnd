@@ -24,8 +24,8 @@ public class Players {
     @Column(name = "player_stats")
     private String player_stats;
 
-    @OneToOne(mappedBy = "player")
-    private Players player;
+    @OneToMany(mappedBy = "player")
+    private Set<Pick> picks;
 
     public Players() {
     }

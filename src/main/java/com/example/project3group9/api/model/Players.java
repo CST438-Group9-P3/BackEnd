@@ -2,13 +2,15 @@ package com.example.project3group9.api.model;
 
 import jakarta.persistence.*;
 
+import java.util.Set;
+
 @Entity
 @Table(name = "player")
 public class Players {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "player_id")
-    private Integer player_id;
+    private Integer playerId;
 
     @Column(name = "name")
     private String name;
@@ -19,17 +21,21 @@ public class Players {
     @Column(name = "position")
     private String position;
 
+    @Column(name = "player_stats")
+    private String player_stats;
 
+    @OneToMany(mappedBy = "player")
+    private Set<Pick> picks;
 
     public Players() {
     }
 
     public Integer getPlayer_id() {
-        return player_id;
+        return playerId;
     }
 
-    public void setPlayer_id(Integer player_id) {
-        this.player_id = player_id;
+    public void setPlayer_id(Integer playerId) {
+        this.playerId = playerId;
     }
 
     public String getName() {
@@ -51,5 +57,11 @@ public class Players {
     }
     public void setPosition(String position) {
         this.position = position;
+    }
+    public String getPlayer_stats() {
+        return player_stats;
+    }
+    public void setPlayer_stats(String player_stats) {
+        this.player_stats = player_stats;
     }
 }

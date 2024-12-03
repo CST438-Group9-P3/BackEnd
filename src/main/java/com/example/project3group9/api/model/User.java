@@ -25,6 +25,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private Set<Transaction> transactions;
 
+    @OneToMany(mappedBy = "user")
+    private Set<Pick> picks;
+
     public User() {};
 
     public Integer getUser_id() {

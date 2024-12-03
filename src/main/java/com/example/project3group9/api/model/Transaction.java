@@ -14,7 +14,7 @@ public class Transaction {
     private Integer transaction_id;
 
     @ManyToOne
-    @JoinColumn(name = "user", nullable = false)
+    @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
     @Column(name="type")

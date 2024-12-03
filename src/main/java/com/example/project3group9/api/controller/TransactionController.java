@@ -29,8 +29,8 @@ public class TransactionController {
     }
 
     @PostMapping("/transaction")
-    public Transaction transaction(@RequestParam User user, @RequestParam String type, @RequestParam Double amount, @RequestParam Date timestamp) {
-        Optional<User> userOptional = userRepository.findByEmailAndUsername(user.getEmail(), user.getUsername());
+    public Transaction transaction(@RequestParam Integer user_id, @RequestParam String type, @RequestParam Double amount, @RequestParam Date timestamp) {
+        Optional<User> userOptional = userRepository.findByuser_id(user_id);
         if (userOptional.isPresent()) {
             Transaction transaction = new Transaction();
             transaction.setUser(userOptional.get());

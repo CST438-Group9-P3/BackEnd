@@ -9,6 +9,7 @@ import com.example.project3group9.api.repositories.PlayersControllerRepository;
 import com.example.project3group9.api.repositories.TransactionRepository;
 import com.example.project3group9.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
@@ -72,11 +73,47 @@ public class PickController {
         }
     }
 
+    @PatchMapping("/finalizePick")
+    public ResponseEntity<Pick> finalizePick(@RequestParam Integer userId, @RequestParam Integer pickId, @RequestParam Double simValue) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if(userOptional.isPresent()) {
+            Optional<Pick> pickOptional = pickRepository.findByPickId(pickId);
+            if(pickOptional.isPresent()) {
+                Pick pick = pickOptional.get();
+                pick.setPlayerValue(simValue);
+                if(pick.getSelection().equalsIgnoreCase("over")){
+                    if(pick.getTargetValue() < pick.getPlayerValue()){
+                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2* pick.getStake()));
+                    } else {
+                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
+                    }
+                } else if(pick.getSelection().equalsIgnoreCase("under")){
+                    if(pick.getTargetValue() < pick.getPlayerValue()){
+                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
+                    } else {
+                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2 * pick.getStake()));
+                    }
+                }
+                pick.setStatus("past");
+                pickRepository.save(pick);
+                return ResponseEntity.ok(pick);
+            }
+            throw new RuntimeException("Pick not found");
+        }
+        throw new RuntimeException("User not found");
+    }
+
     @PostMapping("/createPick")
     public Pick createPick(@RequestParam Integer userId, @RequestParam Integer playerId, @RequestParam String selection, @RequestParam Double stake, @RequestParam Double targetValue, @RequestParam Double playerValue, @RequestParam Date timestamp) {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         Optional<Players> playerOptional = playersControllerRepository.findById(playerId);
         if (userOptional.isPresent() && playerOptional.isPresent()) {
+            if(stake > userOptional.get().getAccount_balance()){
+                throw new RuntimeException("Stake cannot be higher than users account balance");
+            }
+            if(stake < 0){
+                throw new RuntimeException("Stake cannot be negative");
+            }
             Pick pick = new Pick();
             pick.setUser(userOptional.get());
             pick.setPlayer(playerOptional.get());

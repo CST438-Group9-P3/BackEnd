@@ -10,7 +10,7 @@ public class Pick {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "pick_id")
-    private Integer pick_id;
+    private Integer pickId;
 
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false)
@@ -41,10 +41,10 @@ public class Pick {
     public Pick (){};
 
     public Integer getPick_id() {
-        return pick_id;
+        return pickId;
     }
-    public void setPick_id(Integer pick_id) {
-        this.pick_id = pick_id;
+    public void setPick_id(Integer pickId) {
+        this.pickId = pickId;
     }
     public User getUser() {
         return user;

@@ -85,6 +85,7 @@ public class PickController {
             pick.setTargetValue(targetValue);
             pick.setPlayerValue(playerValue);
             pick.setTimestamp(timestamp);
+            pick.setStatus("active");
             return pickRepository.save(pick);
         }
         throw new RuntimeException("User or Player not found");

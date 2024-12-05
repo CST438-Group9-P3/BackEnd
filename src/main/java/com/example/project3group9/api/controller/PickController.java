@@ -9,8 +9,10 @@ import com.example.project3group9.api.repositories.PlayersControllerRepository;
 import com.example.project3group9.api.repositories.TransactionRepository;
 import com.example.project3group9.api.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.sql.Date;
 import java.util.ArrayList;
@@ -79,24 +81,27 @@ public class PickController {
         if(userOptional.isPresent()) {
             Optional<Pick> pickOptional = pickRepository.findByPickId(pickId);
             if(pickOptional.isPresent()) {
-                Pick pick = pickOptional.get();
-                pick.setPlayerValue(simValue);
-                if(pick.getSelection().equalsIgnoreCase("over")){
-                    if(pick.getTargetValue() < pick.getPlayerValue()){
-                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2* pick.getStake()));
-                    } else {
-                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
+                if(pickOptional.get().getStatus().equalsIgnoreCase("active")){
+                    Pick pick = pickOptional.get();
+                    pick.setPlayerValue(simValue);
+                    if(pick.getSelection().equalsIgnoreCase("over")){
+                        if(pick.getTargetValue() < pick.getPlayerValue()){
+                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2* pick.getStake()));
+                        } else {
+                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
+                        }
+                    } else if(pick.getSelection().equalsIgnoreCase("under")){
+                        if(pick.getTargetValue() < pick.getPlayerValue()){
+                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
+                        } else {
+                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2 * pick.getStake()));
+                        }
                     }
-                } else if(pick.getSelection().equalsIgnoreCase("under")){
-                    if(pick.getTargetValue() < pick.getPlayerValue()){
-                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
-                    } else {
-                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2 * pick.getStake()));
-                    }
+                    pick.setStatus("past");
+                    pickRepository.save(pick);
+                    return ResponseEntity.ok(pick);
                 }
-                pick.setStatus("past");
-                pickRepository.save(pick);
-                return ResponseEntity.ok(pick);
+                throw new RuntimeException("Pick is not active");
             }
             throw new RuntimeException("Pick not found");
         }
@@ -109,10 +114,10 @@ public class PickController {
         Optional<Players> playerOptional = playersControllerRepository.findById(playerId);
         if (userOptional.isPresent() && playerOptional.isPresent()) {
             if(stake > userOptional.get().getAccount_balance()){
-                throw new RuntimeException("Stake cannot be higher than users account balance");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be greater than account balance");
             }
             if(stake < 0){
-                throw new RuntimeException("Stake cannot be negative");
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be negative");
             }
             Pick pick = new Pick();
             pick.setUser(userOptional.get());
@@ -124,6 +129,6 @@ public class PickController {
             pick.setTimestamp(timestamp);
             return pickRepository.save(pick);
         }
-        throw new RuntimeException("User or Player not found");
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User or Player not found");
     }
 }

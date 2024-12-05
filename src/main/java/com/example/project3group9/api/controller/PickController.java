@@ -113,13 +113,13 @@ public class PickController {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         Optional<Players> playerOptional = playersControllerRepository.findById(playerId);
         if (userOptional.isPresent() && playerOptional.isPresent()) {
-            if(stake > userOptional.get().getAccount_balance()){
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be greater than account balance");
-            }
-            if(stake < 0){
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be negative");
-            }
-            Pick pick = new Pick();
+//
+            Pick pick = new Pick();if(stake > userOptional.get().getAccount_balance()){
+//                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be greater than account balance");
+//            }
+//            if(stake < 0){
+//                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be negative");
+//            }
             pick.setUser(userOptional.get());
             pick.setPlayer(playerOptional.get());
             pick.setSelection(selection);

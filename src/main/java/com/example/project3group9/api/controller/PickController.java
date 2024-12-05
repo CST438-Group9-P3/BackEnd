@@ -75,6 +75,31 @@ public class PickController {
         }
     }
 
+    @PostMapping("/createPick")
+    public Pick createPick(@RequestParam Integer userId, @RequestParam Integer playerId, @RequestParam String selection, @RequestParam Double stake, @RequestParam Double targetValue, @RequestParam Double playerValue, @RequestParam Date timestamp) {
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        Optional<Players> playerOptional = playersControllerRepository.findById(playerId);
+        if (userOptional.isPresent() && playerOptional.isPresent()) {
+            if(stake > userOptional.get().getAccount_balance()){
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be greater than account balance");
+            }
+            if(stake < 0){
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be negative");
+            }
+            Pick pick = new Pick();
+            pick.setUser(userOptional.get());
+            pick.setPlayer(playerOptional.get());
+            pick.setSelection(selection);
+            pick.setStake(stake);
+            pick.setTargetValue(targetValue);
+            pick.setPlayerValue(playerValue);
+            pick.setTimestamp(timestamp);
+            pick.setStatus("active");
+            return pickRepository.save(pick);
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User or Player not found");
+    }
+
     @PatchMapping("/finalizePick")
     public ResponseEntity<Pick> finalizePick(@RequestParam Integer userId, @RequestParam Integer pickId, @RequestParam Double simValue) {
         Optional<User> userOptional = userRepository.findByUserId(userId);
@@ -106,29 +131,5 @@ public class PickController {
             throw new RuntimeException("Pick not found");
         }
         throw new RuntimeException("User not found");
-    }
-
-    @PostMapping("/createPick")
-    public Pick createPick(@RequestParam Integer userId, @RequestParam Integer playerId, @RequestParam String selection, @RequestParam Double stake, @RequestParam Double targetValue, @RequestParam Double playerValue, @RequestParam Date timestamp) {
-        Optional<User> userOptional = userRepository.findByUserId(userId);
-        Optional<Players> playerOptional = playersControllerRepository.findById(playerId);
-        if (userOptional.isPresent() && playerOptional.isPresent()) {
-            if(stake > userOptional.get().getAccount_balance()){
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be greater than account balance");
-            }
-            if(stake < 0){
-                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be negative");
-            }
-            Pick pick = new Pick();
-            pick.setUser(userOptional.get());
-            pick.setPlayer(playerOptional.get());
-            pick.setSelection(selection);
-            pick.setStake(stake);
-            pick.setTargetValue(targetValue);
-            pick.setPlayerValue(playerValue);
-            pick.setTimestamp(timestamp);
-            return pickRepository.save(pick);
-        }
-        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User or Player not found");
     }
 }

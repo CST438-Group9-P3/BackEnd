@@ -80,6 +80,12 @@ public class PickController {
         Optional<User> userOptional = userRepository.findByUserId(userId);
         Optional<Players> playerOptional = playersControllerRepository.findById(playerId);
         if (userOptional.isPresent() && playerOptional.isPresent()) {
+            if(stake > userOptional.get().getAccount_balance()){
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be greater than account balance");
+            }
+            if(stake < 0){
+                throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Stake cannot be negative");
+            }
             Pick pick = new Pick();
             pick.setUser(userOptional.get());
             pick.setPlayer(playerOptional.get());
@@ -91,7 +97,7 @@ public class PickController {
             pick.setStatus("active");
             return pickRepository.save(pick);
         }
-        throw new RuntimeException("User or Player not found");
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User or Player not found");
     }
 
     @PatchMapping("/finalizePick")

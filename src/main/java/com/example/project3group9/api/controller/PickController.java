@@ -79,24 +79,27 @@ public class PickController {
         if(userOptional.isPresent()) {
             Optional<Pick> pickOptional = pickRepository.findByPickId(pickId);
             if(pickOptional.isPresent()) {
-                Pick pick = pickOptional.get();
-                pick.setPlayerValue(simValue);
-                if(pick.getSelection().equalsIgnoreCase("over")){
-                    if(pick.getTargetValue() < pick.getPlayerValue()){
-                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2* pick.getStake()));
-                    } else {
-                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
+                if(pickOptional.get().getStatus().equalsIgnoreCase("active")){
+                    Pick pick = pickOptional.get();
+                    pick.setPlayerValue(simValue);
+                    if(pick.getSelection().equalsIgnoreCase("over")){
+                        if(pick.getTargetValue() < pick.getPlayerValue()){
+                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2* pick.getStake()));
+                        } else {
+                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
+                        }
+                    } else if(pick.getSelection().equalsIgnoreCase("under")){
+                        if(pick.getTargetValue() < pick.getPlayerValue()){
+                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
+                        } else {
+                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2 * pick.getStake()));
+                        }
                     }
-                } else if(pick.getSelection().equalsIgnoreCase("under")){
-                    if(pick.getTargetValue() < pick.getPlayerValue()){
-                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
-                    } else {
-                        userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2 * pick.getStake()));
-                    }
+                    pick.setStatus("past");
+                    pickRepository.save(pick);
+                    return ResponseEntity.ok(pick);
                 }
-                pick.setStatus("past");
-                pickRepository.save(pick);
-                return ResponseEntity.ok(pick);
+                throw new RuntimeException("Pick is not active");
             }
             throw new RuntimeException("Pick not found");
         }

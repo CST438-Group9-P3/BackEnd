@@ -38,6 +38,9 @@ public class Pick {
     @Column(name="status")
     private String status;
 
+    @Column(name="result")
+    private String result;
+
     public Pick (){};
 
     public Integer getPick_id() {
@@ -93,5 +96,11 @@ public class Pick {
     }
     public void setStatus(String status) {
         this.status = status;
+    }
+    public String getResult() {
+        return result;
+    }
+    public void setResult(String result) {
+        this.result = result;
     }
 }

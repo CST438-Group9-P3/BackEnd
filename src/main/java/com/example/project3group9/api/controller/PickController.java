@@ -96,6 +96,7 @@ public class PickController {
             pick.setTimestamp(timestamp);
             pick.setStatus("active");
             pick.setResult("undefined");
+            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - stake);
             return pickRepository.save(pick);
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User or Player not found");
@@ -115,12 +116,10 @@ public class PickController {
                             userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2* pick.getStake()));
                             pick.setResult("win");
                         } else {
-                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
                             pick.setResult("loss");
                         }
                     } else if(pick.getSelection().equalsIgnoreCase("under")){
                         if(pick.getTargetValue() < pick.getPlayerValue()){
-                            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - pick.getStake());
                             pick.setResult("loss");
                         } else {
                             userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() + (2 * pick.getStake()));

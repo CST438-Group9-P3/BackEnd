@@ -102,6 +102,16 @@ public class PickController {
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User or Player not found");
     }
 
+    @DeleteMapping("/deletePick")
+    public Boolean DeletePick(@RequestParam Integer pickId) {
+        Optional<Pick> pick = pickRepository.findById(pickId);
+        if(pick.isPresent()) {
+            pickRepository.delete(pick.get());
+            return true;
+        }
+        return false;
+    }
+
     @PatchMapping("/finalizePick")
     public ResponseEntity<Pick> finalizePick(@RequestParam Integer userId, @RequestParam Integer pickId, @RequestParam Double simValue) {
         Optional<User> userOptional = userRepository.findByUserId(userId);

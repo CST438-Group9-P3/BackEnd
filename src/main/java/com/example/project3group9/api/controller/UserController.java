@@ -6,8 +6,10 @@ import com.example.project3group9.api.repositories.PlayersControllerRepository;
 import com.example.project3group9.api.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Optional;
@@ -26,6 +28,15 @@ public class UserController {
     @GetMapping("/users")
     public List<User> users(){
         return userRepository.findAll();
+    }
+
+    @GetMapping("/getBalance")
+    public Double getBalance(@RequestParam Integer userId){
+        Optional<User> userOptional = userRepository.findByUserId(userId);
+        if(userOptional.isPresent()){
+            return userOptional.get().getAccount_balance();
+        }
+        throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User or Player not found");
     }
 
     @PostMapping("/login")

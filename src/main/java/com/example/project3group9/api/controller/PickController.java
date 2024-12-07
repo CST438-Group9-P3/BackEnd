@@ -96,7 +96,6 @@ public class PickController {
             pick.setTimestamp(timestamp);
             pick.setStatus("active");
             pick.setResult("undefined");
-            userOptional.get().setAccountBalance(userOptional.get().getAccount_balance() - stake);
             return pickRepository.save(pick);
         }
         throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User or Player not found");

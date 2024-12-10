@@ -24,6 +24,9 @@ public class Players {
     @Column(name = "player_stats")
     private String player_stats;
 
+    @Column(name = "image")
+    private String image;
+
     @OneToMany(mappedBy = "player")
     private Set<Pick> picks;
 
@@ -63,5 +66,11 @@ public class Players {
     }
     public void setPlayer_stats(String player_stats) {
         this.player_stats = player_stats;
+    }
+
+    public String getImage(){return image;}
+
+    public void setImage(String image) {
+        this.image = image;
     }
 }
